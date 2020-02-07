@@ -1,13 +1,28 @@
 /* some style */
 
 .board {
-    width: 500px;
-    height: 500px;
-    border: 1px solid black;
+    width: 480px;
+    height: 480px;
+
+    border: 2px solid #dddddd;
 }
 
-td {
-    text-align: center;
+.board:focus {
+    outline: none;
+}
+
+.row {
+    display: flex;
+    width: 500px;
+    height: 120px;
+}
+
+.num {
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     border: 1px solid #dddddd;
     background-color: #ED816A;
     color: white;
