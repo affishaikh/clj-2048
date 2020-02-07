@@ -15,11 +15,25 @@
            )
     board))
 
+(defn transpose
+  [board]
+  (apply map vector board))
+
+(defn move-up
+  [board]
+  (-> board
+      (transpose)
+      (move-left)
+      (transpose)))
+
 (defn board
   []
   [:div
-   {:class ["board"] :autofocus 1 :tabindex 1
-    :on-key-down (fn [] (swap! board-state move-left))}
+   {:class       ["board"] :autofocus 1 :tabindex 1
+    :on-key-down (fn [kc] (case
+                            (.-which kc)
+                            37 (swap! board-state move-left)
+                            38 (swap! board-state move-up)))}
    (map
      (fn [row]
        [:div
