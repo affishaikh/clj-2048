@@ -26,6 +26,20 @@
       (move-left)
       (transpose)))
 
+(defn move-right
+  [board]
+  (->> board
+      (map reverse)
+      (move-left)
+      (map reverse)))
+
+(defn move-down
+  [board]
+  (-> board
+      (transpose)
+      (move-right)
+      (transpose)))
+
 (defn board
   []
   [:div
@@ -33,7 +47,9 @@
     :on-key-down (fn [kc] (case
                             (.-which kc)
                             37 (swap! board-state move-left)
-                            38 (swap! board-state move-up)))}
+                            38 (swap! board-state move-up)
+                            39 (swap! board-state move-right)
+                            40 (swap! board-state move-down)))}
    (map
      (fn [row]
        [:div
