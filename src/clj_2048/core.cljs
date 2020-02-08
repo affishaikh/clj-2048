@@ -5,19 +5,20 @@
 
 (defn move-left
   [board]
-  (map
+  (mapv
     #(as-> %1 r
            (remove zero? r)
            (partition-by identity r)
            (mapcat (partial partition-all 2 2) r)
            (map (partial apply +) r)
            (concat r (repeat (- 4 (count r)) 0))
+           (vec r)
            )
     board))
 
 (defn transpose
   [board]
-  (apply map vector board))
+  (apply mapv vector board))
 
 (defn move-up
   [board]
@@ -29,9 +30,10 @@
 (defn move-right
   [board]
   (->> board
-      (map reverse)
-      (move-left)
-      (map reverse)))
+       (mapv (comp vec reverse))
+       (move-left)
+       (mapv (comp vec reverse))
+       ))
 
 (defn move-down
   [board]
@@ -40,16 +42,30 @@
       (move-right)
       (transpose)))
 
+(defn insert-2
+  [board]
+  (assoc-in
+    board
+    (rand-nth
+      (for [x (range (count board))
+            y (range (count board))
+            :when (= (get-in board [x y]) 0)]
+        [x y])) 2))
+
+(defn comp-insert-2
+  [f]
+  (comp insert-2 f))
+
 (defn board
   []
   [:div
    {:class       ["board"] :autofocus 1 :tabindex 1
     :on-key-down (fn [kc] (case
                             (.-which kc)
-                            37 (swap! board-state move-left)
-                            38 (swap! board-state move-up)
-                            39 (swap! board-state move-right)
-                            40 (swap! board-state move-down)))}
+                            37 (swap! board-state (comp-insert-2 move-left))
+                            38 (swap! board-state (comp-insert-2 move-up))
+                            39 (swap! board-state (comp-insert-2 move-right))
+                            40 (swap! board-state (comp-insert-2 move-down))))}
    (map
      (fn [row]
        [:div
