@@ -42,7 +42,7 @@
       (move-right)
       (transpose)))
 
-(defn insert-2
+(defn insert-2or4
   [board]
   (assoc-in
     board
@@ -50,11 +50,11 @@
       (for [x (range (count board))
             y (range (count board))
             :when (= (get-in board [x y]) 0)]
-        [x y])) 2))
+        [x y])) (rand-nth [2 4])))
 
 (defn comp-insert-2
   [f]
-  (comp insert-2 f))
+  (comp insert-2or4 f))
 
 (defn board
   []
